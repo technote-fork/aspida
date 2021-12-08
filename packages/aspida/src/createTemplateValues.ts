@@ -56,31 +56,33 @@ export default (
     const props = tree.children
       .map(dirent => {
         const filename = dirent.name
+        const filenameNextJs = /^\[[a-zA-Z0-9]+]\.ts$/.test(dirent.name) ? dirent.name.replace(/^\[([a-zA-Z0-9]+)]\.ts$/, '_$1') : dirent.name
+        const basenameNextJs = dirent.isDir ? filename : filenameNextJs.replace(/\.ts$/, '')
         const basename = dirent.isDir ? filename : filename.replace(/\.ts$/, '')
-        const hasVal = filename.startsWith('_')
+        const hasVal = filenameNextJs.startsWith('_')
         let valFn = `${indent}${toJSValidString(
-          decodeURIComponent(basename)
+          decodeURIComponent(basenameNextJs)
         )}: {\n<% next %>\n${indent}}`
         let newPrefix = prefix
-        let newUrl = `${url}/${basename}`
+        let newUrl = `${url}/${basenameNextJs}`
 
         if (hasVal) {
           const valPathRegExp = new RegExp(
             `${valNameRegExpStr}${valTypeRegExpStr}?((\\.|%[0-9a-fA-F]{2})[a-zA-Z0-9]+)?$`
           )
-          if (!valPathRegExp.test(basename)) {
+          if (!valPathRegExp.test(basenameNextJs)) {
             throw new Error(
-              `aspida \u001b[43m\u001b[31mERROR\u001b[0m '${basename}' does not match '${valPathRegExp.toString()}'.`
+              `aspida \u001b[43m\u001b[31mERROR\u001b[0m '${basenameNextJs}' does not match '${valPathRegExp.toString()}'.`
             )
           }
 
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const valName = basename.match(valNameRegExp)![0]
-          const valType = basename.replace(valName, '').startsWith('@')
-            ? basename.split('@')[1].slice(0, 6)
+          const valName = basenameNextJs.match(valNameRegExp)![0]
+          const valType = basenameNextJs.replace(valName, '').startsWith('@')
+            ? basenameNextJs.split('@')[1].slice(0, 6)
             : null
           const postfix = decodeURIComponent(
-            basename.replace(valName, '').replace(valType ? `@${valType}` : '', '')
+            basenameNextJs.replace(valName, '').replace(valType ? `@${valType}` : '', '')
           )
           const prevUrl = `'${decodeURIComponent(url)}${trailingSlash ? '/' : ''}'`
           if (url.length && !pathes.includes(prevUrl)) pathes.push(prevUrl)
@@ -100,14 +102,14 @@ export default (
         }
 
         const fallbackSpecialCharsProp = (text: string) =>
-          /%[0-9a-fA-F]{2}/.test(basename)
+          /%[0-9a-fA-F]{2}/.test(basenameNextJs)
             ? `${text},\n${text.replace(
                 /^( +?)[^ ]+?:/,
                 `$1/**\n$1 * @deprecated \`${toJSValidString(
-                  basename.replace(valTypeRegExp, '')
+                  basenameNextJs.replace(valTypeRegExp, '')
                 )}\` has been deprecated.\n$1 * Use \`${toJSValidString(
-                  decodeURIComponent(basename.replace(valTypeRegExp, ''))
-                )}\` instead\n$1 */\n$1${toJSValidString(basename.replace(valTypeRegExp, ''))}:`
+                  decodeURIComponent(basenameNextJs.replace(valTypeRegExp, ''))
+                )}\` instead\n$1 */\n$1${toJSValidString(basenameNextJs.replace(valTypeRegExp, ''))}:`
               )}`
             : text
 

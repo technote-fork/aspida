@@ -31,10 +31,10 @@ jobs:
       - run: yarn typecheck
       - run: yarn test --coverage
         if: matrix.node-version != 10
-      - run: npx codecov
-        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest' && matrix.node-version == 14
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+#      - run: npx codecov
+#        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest' && matrix.node-version == 14
+#        env:
+#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     runs-on: ubuntu-latest
@@ -58,27 +58,27 @@ jobs:
       - run: cd packages/aspida && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: yarn build:axios
-      - run: cd packages/aspida-axios && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: yarn build:fetch
-      - run: cd packages/aspida-fetch && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: yarn build:node-fetch
-      - run: cd packages/aspida-node-fetch && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: yarn build:react-query
-      - run: cd packages/aspida-react-query && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: yarn build:swr
-      - run: cd packages/aspida-swr && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: yarn build:swrv
-      - run: cd packages/aspida-swrv && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: yarn build:axios
+#      - run: cd packages/aspida-axios && npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: yarn build:fetch
+#      - run: cd packages/aspida-fetch && npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: yarn build:node-fetch
+#      - run: cd packages/aspida-node-fetch && npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: yarn build:react-query
+#      - run: cd packages/aspida-react-query && npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: yarn build:swr
+#      - run: cd packages/aspida-swr && npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - run: yarn build:swrv
+#      - run: cd packages/aspida-swrv && npm publish
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
