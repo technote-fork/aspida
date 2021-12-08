@@ -56,7 +56,9 @@ export default (
     const props = tree.children
       .map(dirent => {
         const filename = dirent.name
-        const filenameNextJs = /^\[[a-zA-Z0-9]+]\.ts$/.test(dirent.name) ? dirent.name.replace(/^\[([a-zA-Z0-9]+)]\.ts$/, '_$1') : dirent.name
+        const filenameNextJs = /^\[[a-zA-Z0-9]+]\.ts$/.test(dirent.name)
+          ? dirent.name.replace(/^\[([a-zA-Z0-9]+)]\.ts$/, '_$1')
+          : dirent.name
         const basenameNextJs = dirent.isDir ? filename : filenameNextJs.replace(/\.ts$/, '')
         const basename = dirent.isDir ? filename : filename.replace(/\.ts$/, '')
         const hasVal = filenameNextJs.startsWith('_')
@@ -109,7 +111,9 @@ export default (
                   basenameNextJs.replace(valTypeRegExp, '')
                 )}\` has been deprecated.\n$1 * Use \`${toJSValidString(
                   decodeURIComponent(basenameNextJs.replace(valTypeRegExp, ''))
-                )}\` instead\n$1 */\n$1${toJSValidString(basenameNextJs.replace(valTypeRegExp, ''))}:`
+                )}\` instead\n$1 */\n$1${toJSValidString(
+                  basenameNextJs.replace(valTypeRegExp, '')
+                )}:`
               )}`
             : text
 
