@@ -53,14 +53,17 @@ export default (
     text: string,
     methodsOfIndexTsFile?: string
   ): string => {
+    const nextJsDirName = (name: string): string => /^\[([a-zA-Z0-9]+)]$/.test(name) ? `_${name.replace(/^\[([a-zA-Z0-9]+)]$/, '$1')}` : name;
     const props = tree.children
       .map(dirent => {
         const filename = dirent.name
-        const filenameNextJs = /^\[[a-zA-Z0-9]+]\.ts$/.test(dirent.name)
-          ? dirent.name.replace(/^\[([a-zA-Z0-9]+)]\.ts$/, '_$1')
-          : dirent.name
-        const basenameNextJs = dirent.isDir ? filename : filenameNextJs.replace(/\.ts$/, '')
-        const basename = dirent.isDir ? filename : filename.replace(/\.ts$/, '')
+        const filenameNextJs = dirent.isDir
+          ? nextJsDirName(filename)
+          : /^\[[a-zA-Z0-9]+]\.ts$/.test(filename)
+          ? filename.replace(/^\[([a-zA-Z0-9]+)]\.ts$/, '_$1')
+          : filename
+        const basenameNextJs = dirent.isDir ? nextJsDirName(filename) : filenameNextJs.replace(/\.ts$/, '')
+        const basename = dirent.isDir ? nextJsDirName(filename) : filename.replace(/\.ts$/, '')
         const hasVal = filenameNextJs.startsWith('_')
         let valFn = `${indent}${toJSValidString(
           decodeURIComponent(basenameNextJs)
